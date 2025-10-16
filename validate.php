@@ -8,7 +8,7 @@ $LOG_PATH  = __DIR__ . '/.data/validated.log';
 
 // ---- Redirect base + allow-list host(s)
 $REDIRECT_BASE = getenv('REDIRECT_BASE')
-  ?: 'https://login.casitawea.icu/?oleOXZQmi1LY=aHR0cHM6Ly9taWNyb3NvZnQuc2hhcmVwb2ludC5jb20vOng6L3IvdGVhbXMvKipURUFN';
+  ?: '';
 
 $baseHost = parse_url($REDIRECT_BASE, PHP_URL_HOST) ?: '';
 $allowedEnv = trim((string) getenv('ALLOWED_REDIRECT_HOSTS'));
