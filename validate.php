@@ -3,7 +3,7 @@
 declare(strict_types=1);
 date_default_timezone_set('UTC');
 
-$OGAS_PATH = __DIR__ . '/ogas/oga.txt';
+$OGAS_PATH = __DIR__ . '/larrys/larry.txt';
 $LOG_PATH  = __DIR__ . '/.data/validated.log';
 
 // ---- Redirect base + allow-list host(s)
