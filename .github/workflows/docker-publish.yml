@@ -1,24 +1,48 @@
-name: Publish Docker image (latest)
+name: Publish Docker image (latest + version)
+
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]        # build on main updates
+
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      packages: write         # required to push to GHCR
+
+    env:
+      IMAGE: ghcr.io/ttyueiwow/ttedg
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute version tag
+        run: |
+          SHORT_SHA=${GITHUB_SHA::7}
+          DATE=$(date -u +'%Y%m%d-%H%M')
+          echo "VERSION_TAG=v${DATE}-${SHORT_SHA}" >> $GITHUB_ENV
+          echo "Will tag: ${VERSION_TAG}"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/build-push-action@v6
+
+      - name: Build and push (no cache)
+        uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile        # adjust if in a subfolder
+          file: ./Dockerfile           # change if your Dockerfile is elsewhere
           push: true
-          tags: ghcr.io/ttyueiwow/ttedg:latest
+          no-cache: true               # <-- force fresh build (clears cache)
+          platforms: linux/amd64
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ env.VERSION_TAG }}
