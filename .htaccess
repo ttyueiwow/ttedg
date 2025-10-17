@@ -1,5 +1,0 @@
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteRule ^\.data/ - [F,L]
-  RewriteRule ^larrys/ - [F,L]
-</IfModule>
